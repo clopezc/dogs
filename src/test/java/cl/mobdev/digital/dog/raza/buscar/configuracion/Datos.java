@@ -10,10 +10,11 @@ import java.util.List;
 public class Datos {
 
 
-    public static final String STATUS_OK = "succes";
+    public static final String STATUS_OK = "success";
     public static final String BREED = "hound";
     public static final String RESPUESTA_CODIGO_ERROR = "1";
-    public static final String RESPUESTA_CODIGO_ERROR_GENERAL = "3";
+    public static final String RESPUESTA_MSJ_ERROR ="Error with DOG api";
+    public static final String RESPUESTA_CODIGO_ERROR_NOT_FOUD = "4";
 
 
     public static ServiceResponse RESPONSE_BREED_LIST() {

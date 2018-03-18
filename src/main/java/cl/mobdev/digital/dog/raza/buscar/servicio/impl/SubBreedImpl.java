@@ -3,6 +3,9 @@ package cl.mobdev.digital.dog.raza.buscar.servicio.impl;
 import cl.mobdev.digital.dog.raza.buscar.entidad.ServiceResponse;
 import cl.mobdev.digital.dog.raza.buscar.servicio.ISubBreed;
 import cl.mobdev.digital.dog.raza.buscar.util.Utils;
+import com.google.gson.Gson;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,15 +13,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.List;
+
 @Service
 public class SubBreedImpl implements ISubBreed {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
     private RestTemplate restTemplate;
 
-    @Autowired
     private Utils utils;
 
     @Value("${prefixEndpoint}")
@@ -36,10 +39,10 @@ public class SubBreedImpl implements ISubBreed {
     public ServiceResponse findBySubBreed(String breed) {
 
         String path = "breed/" + breed + "/list";
-        ServiceResponse subBreed= restTemplate.getForObject(prefixEndpoint + path, ServiceResponse.class);
-        utils.validateResponse(subBreed.getStatus(), subbreederror);
-        logger.info("subBreed = {}", subBreed);
-        return subBreed;
+        JSONObject obj = restTemplate.getForObject(prefixEndpoint + path, JSONObject.class);
+        utils.validateResponse(obj, subbreederror);
+        logger.info("subBreed = {}", obj.toJSONString());
+        return utils.returnResponse(obj);
     }
 
 }

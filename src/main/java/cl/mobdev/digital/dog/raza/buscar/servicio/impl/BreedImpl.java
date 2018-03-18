@@ -3,6 +3,9 @@ package cl.mobdev.digital.dog.raza.buscar.servicio.impl;
 import cl.mobdev.digital.dog.raza.buscar.entidad.ServiceResponse;
 import cl.mobdev.digital.dog.raza.buscar.servicio.IBreed;
 import cl.mobdev.digital.dog.raza.buscar.util.Utils;
+import com.fasterxml.jackson.databind.util.JSONPObject;
+import com.fasterxml.jackson.databind.util.JSONWrappedObject;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +41,10 @@ public class BreedImpl implements IBreed {
     @Override
     public ServiceResponse findBreedList() {
 
-        ServiceResponse breedList = restTemplate.getForObject(prefixEndpoint + breedsList, ServiceResponse.class);
-        utils.validateResponse(breedList.getStatus(), breedListError);
-        logger.info("breedList = {}", breedList);
-        return breedList;
+        JSONObject obj = restTemplate.getForObject(prefixEndpoint + breedsList, JSONObject.class);
+        utils.validateResponse(obj, breedListError);
+        logger.info("breedList = {}", obj.toJSONString());
+        return utils.returnResponse(obj);
     }
 
 }

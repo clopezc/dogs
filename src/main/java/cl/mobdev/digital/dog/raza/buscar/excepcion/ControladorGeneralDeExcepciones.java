@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,8 +14,8 @@ public class ControladorGeneralDeExcepciones {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Value("${errorGeneral}")
-    private String errorGeneral;
+    @Value("${breedNotFound}")
+    private String breedNotFound;
 
     public ControladorGeneralDeExcepciones() {
         super();
@@ -28,14 +27,14 @@ public class ControladorGeneralDeExcepciones {
 
         ServicioCodigoErrorExcepcion gbe = (ServicioCodigoErrorExcepcion) ex;
         logger.error("ERROR = {}",gbe.getCodigo());
-        return new ResponseError(gbe.getCodigo(), "Error with DOG api");
+        return new ResponseError(gbe.getCodigo(), gbe.getMsg());
     }
 
-    @ExceptionHandler(value = HttpMessageNotReadableException.class)
+    @ExceptionHandler(value = BreedNotFoundExcepcion.class)
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public ResponseError httpMessageNotReadableException() {
-        logger.error("ERROR = {}", errorGeneral);
-        return new ResponseError(errorGeneral, "Breed not found");
+    public ResponseError breedNotFound() {
+        logger.error("ERROR = {}", breedNotFound);
+        return new ResponseError(breedNotFound, "Breed not found in list");
     }
 
 }

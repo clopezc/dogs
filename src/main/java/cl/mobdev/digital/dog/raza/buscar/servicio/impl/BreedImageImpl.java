@@ -3,6 +3,7 @@ package cl.mobdev.digital.dog.raza.buscar.servicio.impl;
 import cl.mobdev.digital.dog.raza.buscar.entidad.ServiceResponse;
 import cl.mobdev.digital.dog.raza.buscar.servicio.IBreedImage;
 import cl.mobdev.digital.dog.raza.buscar.util.Utils;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class BreedImageImpl implements IBreedImage {
     @Value("${prefixEndpoint}")
     private String prefixEndpoint;
 
+    @Value("${imageBreedError}")
+    private String imageBreedError;
+
     public BreedImageImpl(RestTemplate restTemplate, Utils utils) {
         this.restTemplate = restTemplate;
         this.utils = utils;
@@ -34,10 +38,10 @@ public class BreedImageImpl implements IBreedImage {
     public ServiceResponse findBreedImage(String breed) {
 
         String path = "breed/" + breed + "/images";
-        ServiceResponse breedImage = restTemplate.getForObject(prefixEndpoint + path, ServiceResponse.class);
-        utils.validateResponse(breedImage.getStatus(), breedImage.getStatus());
-        logger.info("breedImage = {}", breedImage);
-        return breedImage;
+        JSONObject obj = restTemplate.getForObject(prefixEndpoint + path, JSONObject.class);
+        utils.validateResponse(obj,imageBreedError );
+        logger.info("breedImage = {}", obj.toJSONString());
+        return utils.returnResponse(obj);
     }
 
 }

@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -30,14 +29,14 @@ public class ControladorGeneralDeExcepcionesTest {
     @Before
     public void configure() {
         ReflectionTestUtils.setField(controladorGeneralDeExcepciones,
-                "errorGeneral",
-                "3");
+                "breedNotFound",
+                "4");
     }
 
     @Test
     public void testControladorExcepcionesServiceError() {
 
-        exception = new ServicioCodigoErrorExcepcion(Datos.RESPUESTA_CODIGO_ERROR);
+        exception = new ServicioCodigoErrorExcepcion(Datos.RESPUESTA_CODIGO_ERROR,Datos.RESPUESTA_MSJ_ERROR);
 
         ResponseError responseError
                 = controladorGeneralDeExcepciones.gestionBuscarExcepcion(exception);
@@ -50,7 +49,7 @@ public class ControladorGeneralDeExcepcionesTest {
 
         assertThat(responseError.getMessage(),
                 is(
-                        "Error with DOG api"
+                        Datos.RESPUESTA_MSJ_ERROR
                 )
         );
 
@@ -69,12 +68,10 @@ public class ControladorGeneralDeExcepcionesTest {
     }
 
     @Test
-    public void testControladorExcepcionesHttpMessage() {
-
-        //exception = new HttpMessageNotReadableException(Datos.RESPUESTA_CODIGO_ERROR_GENERAL);
+    public void testControladorExcepcionesBreedNotFound() {
 
         ResponseError responseError
-                = controladorGeneralDeExcepciones.httpMessageNotReadableException();
+                = controladorGeneralDeExcepciones.breedNotFound();
 
         assertThat(responseError,
                 not(
@@ -84,19 +81,19 @@ public class ControladorGeneralDeExcepcionesTest {
 
         assertThat(responseError.getMessage(),
                 is(
-                        "Breed not found"
+                        "Breed not found in list"
                 )
         );
 
         assertThat(responseError.getCodigo(),
                 is(
-                        Datos.RESPUESTA_CODIGO_ERROR_GENERAL
+                        Datos.RESPUESTA_CODIGO_ERROR_NOT_FOUD
                 )
         );
 
         assertThat(responseError.toString(),
                 is(
-                        "ResponseError{codigo='3', message='Breed not found'}"
+                        "ResponseError{codigo='4', message='Breed not found in list'}"
                 )
         );
 
